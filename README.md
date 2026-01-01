@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Release Tracker
+
+A simple, clean dashboard to track deployment releases vs rollbacks and monitor your success rate.
+
+## Features
+
+- Display total releases and rollbacks
+- Calculate success rate and rollback percentage
+- Dark mode support
+- Config-driven counters
+- Automatic deployment to GitHub Pages
 
 ## Getting Started
 
-First, run the development server:
+### Development
+
+Run the development server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Updating Counters
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Counter values are stored in `public/config.json`. To update the counts:
 
-## Learn More
+1. Edit `public/config.json`:
+```json
+{
+  "releases": 42,
+  "rollbacks": 3
+}
+```
 
-To learn more about Next.js, take a look at the following resources:
+2. Commit and push to GitHub:
+```bash
+git add public/config.json
+git commit -m "Update release counters"
+git push
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. GitHub Actions will automatically rebuild and deploy the site with the new values.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deploy to GitHub Pages
 
-## Deploy on Vercel
+This project is configured for automatic deployment to GitHub Pages.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Initial Setup
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Create a GitHub repository and push your code:
+```bash
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/days-since-last-rollback.git
+git push -u origin main
+```
+
+2. Enable GitHub Pages:
+   - Go to repository Settings → Pages
+   - Source: Select "GitHub Actions"
+
+3. The site will be available at: `https://YOUR_USERNAME.github.io/days-since-last-rollback/`
+
+### Automatic Deployments
+
+Every push to the `main` branch triggers an automatic rebuild and deployment via GitHub Actions.
+
+## Tech Stack
+
+- [Next.js 16](https://nextjs.org) - React framework with static export
+- [React 19](https://react.dev) - UI library
+- [TypeScript](https://www.typescriptlang.org) - Type safety
+- [Tailwind CSS](https://tailwindcss.com) - Styling
+- [GitHub Actions](https://github.com/features/actions) - CI/CD
