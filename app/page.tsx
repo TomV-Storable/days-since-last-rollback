@@ -5,11 +5,13 @@ import { useEffect, useState } from "react";
 interface Config {
   releases: number;
   rollbacks: number;
+  lastRollbackDate: string | null;
 }
 
 export default function Home() {
   const [releases, setReleases] = useState(0);
   const [rollbacks, setRollbacks] = useState(0);
+  const [lastRollbackDate, setLastRollbackDate] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,6 +23,7 @@ export default function Home() {
 
         setReleases(config.releases);
         setRollbacks(config.rollbacks);
+        setLastRollbackDate(config.lastRollbackDate);
       } catch (error) {
         console.error('Failed to load config:', error);
       } finally {
@@ -34,6 +37,10 @@ export default function Home() {
   const successRate = releases > 0
     ? ((releases - rollbacks) / releases * 100).toFixed(1)
     : '0.0';
+
+  const daysSinceLastRollback = lastRollbackDate
+    ? Math.floor((new Date().getTime() - new Date(lastRollbackDate).getTime()) / (1000 * 60 * 60 * 24))
+    : null;
 
   if (loading) {
     return (
@@ -55,6 +62,25 @@ export default function Home() {
           <p className="text-lg text-zinc-600 dark:text-zinc-400">
             Monitor your deployment success rate
           </p>
+        </div>
+
+        <div className="bg-white dark:bg-zinc-800 rounded-2xl shadow-xl p-12 border-2 border-zinc-300 dark:border-zinc-600 mb-8">
+          <h2 className="text-2xl font-semibold text-zinc-700 dark:text-zinc-300 mb-6 text-center">
+            Days Since Last Rollback
+          </h2>
+          <p className="text-8xl font-bold text-blue-600 dark:text-blue-400 text-center mb-4">
+            {daysSinceLastRollback !== null ? daysSinceLastRollback : '\u221E'}
+          </p>
+          {lastRollbackDate && (
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 text-center">
+              Last rollback: {new Date(lastRollbackDate).toLocaleDateString()}
+            </p>
+          )}
+          {!lastRollbackDate && (
+            <p className="text-sm text-zinc-500 dark:text-zinc-400 text-center">
+              No rollbacks recorded
+            </p>
+          )}
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 mb-8">
